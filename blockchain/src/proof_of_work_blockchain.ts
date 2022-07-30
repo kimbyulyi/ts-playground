@@ -1,25 +1,34 @@
-import { Console } from "console";
 import * as crypto from "crypto";
 
 class Block {
+  readonly nonce: number; // nonce property
   readonly hash: string;
 
   constructor(
-    readonly index: number, // 블록 인덱스
-    readonly previousHash: string, // 이전 블록 해쉬값
-    readonly timestamp: string, // 블록 생성 시간
-    readonly data: string // 앱 관련 데이터
+    readonly index: number,
+    readonly previousHash: string,
+    readonly timestamp: string,
+    readonly data: string
   ) {
-    this.hash = this.calcHash();
+    const { nonce, hash } = this.mine(); // 논스와 해시를 계산.
+    this.nonce = nonce;
+    this.hash = hash;
   }
 
-  private calcHash(): string {
+  private calcHash(nonce: number): string {
     const data = this.index + this.previousHash + this.timestamp + this.data;
-
     return crypto.createHash("sha256").update(data).digest("hex");
-    // createHash("sha256") SHA-256 해시를 생성하기 위해 Hash 인스턴스 생성
-    // update(data) 해시 객체 내 해시값을 계산하고 업데이트
-    // digest('hext') 해시값을 16진수로 변환
+  }
+
+  private mine(): { nonce: number; hash: string } {
+    let hash: string;
+    let nonce = 0;
+
+    do {
+      hash = this.calcHash(++nonce); // 브루트 포스를 시작함.
+    } while (hash.startsWith("00000") === false); // 해시 시작값이 00000 이 될떄까지 반복문을 실행.
+
+    return { nonce, hash };
   }
 }
 

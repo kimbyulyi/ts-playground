@@ -1,0 +1,19 @@
+{
+  "name": "blockchain_browser",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "serve",
+    "compileDeploy": "tsc && npm run deploy",
+    "deploy": "copyfiles -f src/browser/*.html src/browser/*.css dist"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^18.6.2",
+    "copyfiles": "^2.4.1",
+    "serve": "^14.0.1",
+    "typescript": "^4.7.4"
+  }
+}
